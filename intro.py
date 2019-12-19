@@ -2,7 +2,7 @@
 
 import csv
 
-csv_file = csv.reader(open( <FILE NAME> ))
+csv_file = csv.reader(open( '<FILE NAME>' ))
 next(csv_file)
 
 upsets = 0
@@ -11,7 +11,7 @@ non_upsets = 0
 starting_bankroll = 100
 wagering_size = 5
 
-bank_roll = starting_bankroll
+bankroll = starting_bankroll
 
 '''
 Now we get to core of things when we introduce a for loop to our current code. Basically what this does is that it iterates over every instance that you set for it. You could say that you want to run a code 10 times, and then use a for loop with a range(0, 9).

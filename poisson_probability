@@ -1,0 +1,94 @@
+'''
+The goal here is to predict which teams will win by focusing on which teams will score the most goals or points, and concede the least of them.
+
+There are a variety of different factors that correlate with high goal scoring, like possession of the ball, shots on goal and other relevant ones. In this example however, we will go with a much simpler approach as we will simply look at the previous scoring rates of teams (and concede rates) and compare them to the league averages.
+'''
+
+import csv, math, ast, numpy as np
+
+def poisson(actual, mean):
+    return math.pow(mean, actual) * math.exp(-mean) / math.factorial(actual)
+    '''create function here that calculates of the probability of ‘actual’ amounts of goals scored, when the mean is equal to ‘mean’. This        writes out the probability ‘p’.
+    '''
+    
+csvFile = <'FILENAME.csv'>
+
+team_list = []
+
+k = open('team_list.txt', 'w')
+k.write("""{
+""")
+'''
+a. Then we create an empty list, called team_list. 
+b. Next we open a file named ‘team_list.txt’. You do not need to create this as if it does not exist, Python will create it. If it does exist, using the ‘w’ tag after the name ensures that it deletes all the info in the file and starts fresh.
+c. Then we write the first line in the file, which is the start of a dictionary. This is needed to hold and update our data for each teams variables.
+'''
+
+csvRead = csv.reader(open(csvFile))
+next(csvRead)
+
+for row in csvRead:
+	if row[2] not in team_list:
+		team_list.append(row[2])
+	if row[3] not in team_list:
+		team_list.append(row[3])
+
+team_list.sort()
+
+for team in team_list:
+	k.write("""	'%s': {'home_goals': 0, 'away_goals': 0, 'home_conceded': 0, 'away_conceded': 0, 'home_games': 0, 'away_games': 0, 'alpha_h': 0, 'beta_h': 0, 'alpha_a': 0, 'beta_a': 0},
+""" % (team))
+
+k.write("}")
+k.close()
+
+s = open('team_list.txt', 'r').read()
+dict = ast.literal_eval(s)
+
+'''
+(a) Next we want to iterate over our data file and find all the team names that are going to be used (skip the first line and then create a for loop).
+
+(b) The for loop simply reads both team names and then checks if the names are in our newly created team_list. If they are not, they get added to the list (append()).
+
+(c) After it has checked all the team names, it sorts the new list alphabetically (sort()).
+
+(d) Then it goes over to another for loop where it iterates over all the teams that have been found. For each team it will be written a line in the text file with different variables that we are going to use. In this example we will record all the home goals and away goals they score, as well as how many goals they concede both at home and away. We also track the amount of home and away games.
+
+(e) Last we have some variables that calculate the scoring rate and concede rate for every team, and from this calculate probabilities of winning a game.
+
+(f) We then write the end of the file and close it. This is so as to save what we have written if we want to open it again.
+
+(g) The next two lines creates our dictionary where we will hold and update our data we read. This is done by using the ast module which will read the team_list.txt file and then create a dictionary called ‘dict’.
+'''
+
+GAMES_PLAYED = 0
+WEEKS_WAIT = 4
+TOTAL_VALUE = 0
+
+csvRead = csv.reader(open(csvFile))
+next(csvRead)
+
+'''
+Then we write a few variables we will use throughout the script. GAMES_PLAYED is simply the total tally of games played, WEEKS_WAIT is the number of weeks we want to wait before we start placing bets on our model and then TOTAL_VALUE will be used to update how are betting are doing.
+
+Next we open another iteration of the data and skip the first line as usual, before we start with our main loop.
+'''
+
+for game in csvRead:
+	home_team = game[2]
+	away_team = game[3]
+
+	home_goals = int(game[4])
+	away_goals = int(game[5])
+
+	home_win_prob = 0
+	draw_win_prob = 0
+	away_win_prob = 0
+	
+	curr_home_goals = 0
+	curr_away_goals = 0
+	avg_home_goals = 1
+	avg_away_goals = 1
+	
+	team_bet = ''
+	ev_bet = ''

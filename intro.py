@@ -32,21 +32,22 @@ for game in csv_file:
 	home_odds = float(game[23])
 	draw_odds = float(game[24])
 	away_odds = float(game[25])
-  
+
+	if home_odds > away_odds:
+		if home_goals > away_goals:
+			upsets += 1
+			bankroll += wagering_size * (home_odds - 1)
+		else:
+			non_upsets += 1
+			bankroll -= wagering_size
+
+
+
 '''
 In this model we are looking for home underdogs, which is when the odds of a home team win is higher than an away team win.
 
-To do this, we use what is called an if function. Basically what it does is that it takes a condition that needs to be met, and if that is true, then it runs some code, otherwise it does something else, which can be nothing.
+To do this, we use an if function. Basically what it does is that it takes a condition that needs to be met, and if that is true, then it runs some code, otherwise it does something else, which can be nothing.
 '''
-	if home_odds > away_odds:
-		if home_goals > away_goals:
-  			upsets += 1
-  			bankroll += wagering_size * (home_odds - 1)
-  
-		else:
-  			non_upsets += 1
-  			bankroll -= wagering_size
-  
 '''
 So we're doing is looking at a game and comparing the odds of the home team winning and the odds of the away team winning. If there is higher odds for a home win, we proceed, if not, we ignore that game.
 

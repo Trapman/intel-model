@@ -92,3 +92,12 @@ for game in csvRead:
 	
 	team_bet = ''
 	ev_bet = ''
+
+# GETTING UPDATED VARIABLES
+	for key, value in dict.items():
+		curr_home_goals += dict[key]['home_goals']
+		curr_away_goals += dict[key]['away_goals']
+		
+		if GAMES_PLAYED > (WEEKS_WAIT * 10):
+			avg_home_goals = curr_home_goals / (GAMES_PLAYED)
+			avg_away_goals = curr_away_goals / (GAMES_PLAYED)

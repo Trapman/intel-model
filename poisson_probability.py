@@ -201,3 +201,5 @@ for game in csvRead:
 			dict[key]['beta_h'] = beta_h
 			dict[key]['alpha_a'] = alpha_a
 			dict[key]['beta_a'] = beta_a
+			
+			#clean the rest of this up
